@@ -1,0 +1,13 @@
+frontend:
+  image:
+    repository: your-dockerhub-username/frontend
+    tag: latest
+  service:
+    port: 80
+
+backend:
+  image:
+    repository: your-dockerhub-username/backend
+    tag: latest
+  service:
+    port: 8080
