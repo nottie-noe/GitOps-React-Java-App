@@ -1,0 +1,8 @@
+replicaCount: 1
+image:
+  repository: your-backend-image
+  tag: latest
+  pullPolicy: IfNotPresent
+service:
+  type: ClusterIP
+  port: 8080
