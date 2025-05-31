@@ -6,17 +6,18 @@ pipeline {
         DOCKER_IMAGE_FRONTEND = 'nottiey/frontend'
         BACKEND_PATH = 'backend'
         FRONTEND_PATH = 'frontend'
+        GITHUB_REPO = 'https://github.com/nottie-noe/GitOps-React-Java-App.git'
     }
 
     tools {
-        maven 'Maven'      // Must be configured in Jenkins > Global Tool Config
-        nodejs 'NodeJS'    // Must be configured via NodeJS Plugin
+        maven 'Maven'      // Jenkins > Global Tool Configuration
+        nodejs 'NodeJS'    // Requires NodeJS Plugin
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/nottie-noe/GitOps-React-Java-App.git'
+                git branch: 'main', url: "${GITHUB_REPO}"
             }
         }
 
@@ -32,8 +33,14 @@ pipeline {
             steps {
                 dir("${FRONTEND_PATH}") {
                     sh 'npm install'
-                    // fallback if "build" script is not defined
-                    sh 'npm run build || echo "Skipping build: no build script defined"'
+                    // Build only if script is defined and files exist
+                    sh '''
+                        if [ -f package.json ] && grep -q '"build":' package.json && [ -f src/index.js ]; then
+                            npm run build
+                        else
+                            echo "Skipping build: build script or index.js not found"
+                        fi
+                    '''
                 }
             }
         }
@@ -61,17 +68,17 @@ pipeline {
 
         stage('Update Helm Values (Optional)') {
             steps {
-                script {
+                withCredentials([usernamePassword(credentialsId: 'github-push-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     sh '''
                         git config user.name "ci-bot"
                         git config user.email "ci@example.com"
 
-                        sed -i "s|repository:.*|repository: ${DOCKER_IMAGE_BACKEND}|" helm/umbrella-chart/charts/backend/values.yaml
-                        sed -i "s|repository:.*|repository: ${DOCKER_IMAGE_FRONTEND}|" helm/umbrella-chart/charts/frontend/values.yaml
+                        sed -i "s|repository:.*|repository: nottiey/backend|" helm/umbrella-chart/charts/backend/values.yaml
+                        sed -i "s|repository:.*|repository: nottiey/frontend|" helm/umbrella-chart/charts/frontend/values.yaml
 
                         git add helm/umbrella-chart/charts/*/values.yaml
-                        git commit -m "Update image repos from Jenkins"
-                        git push origin main
+                        git commit -m "Update image repos from Jenkins" || echo "No changes to commit"
+                        git push https://$GIT_USER:$GIT_PASS@github.com/nottie-noe/GitOps-React-Java-App.git main
                     '''
                 }
             }
