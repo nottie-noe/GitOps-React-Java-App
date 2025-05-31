@@ -4,6 +4,7 @@ image:
   pullPolicy: IfNotPresent
   args:
     - "-text=Hello from Backend"
+    - "-listen=:5678"
 
 service:
   type: ClusterIP
