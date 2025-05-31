@@ -1,8 +1,8 @@
-replicaCount: 1
 image:
-  repository: your-frontend-image
+  repository: nginx
   tag: latest
   pullPolicy: IfNotPresent
+
 service:
   type: ClusterIP
   port: 80
