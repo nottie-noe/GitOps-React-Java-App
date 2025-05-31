@@ -1,5 +1,5 @@
 image:
-  repository: hashicorp/http-echo
+  repository: nottiey/backend
   tag: "0.2.3"
   pullPolicy: IfNotPresent
   args:

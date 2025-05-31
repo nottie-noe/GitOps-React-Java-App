@@ -1,5 +1,5 @@
 image:
-  repository: nginx
+  repository: nottiey/frontend
   tag: latest
   pullPolicy: IfNotPresent
 
