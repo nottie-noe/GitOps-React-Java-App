@@ -2,14 +2,12 @@
   "name": "frontend",
   "version": "1.0.0",
   "dependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "react-scripts": "^5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
     "test": "react-scripts test --env=jsdom",
     "build": "react-scripts build"
-  }
-  "dependencies": {
-  "react-scripts": "^5.0.1"
   }
 }
