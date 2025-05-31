@@ -1,8 +1,10 @@
-replicaCount: 1
 image:
-  repository: your-backend-image
-  tag: latest
+  repository: hashicorp/http-echo
+  tag: "0.2.3"
   pullPolicy: IfNotPresent
+  args:
+    - "-text=Hello from Backend"
+
 service:
   type: ClusterIP
-  port: 8080
+  port: 5678
