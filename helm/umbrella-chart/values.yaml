@@ -1,13 +1,10 @@
-frontend:
-  image:
-    repository: your-dockerhub-username/frontend
-    tag: latest
-  service:
-    port: 80
+image:
+  repository: hashicorp/http-echo
+  tag: "0.2.3"
+  pullPolicy: IfNotPresent
+  args:
+    - "-text=Hello from Backend"
 
-backend:
-  image:
-    repository: your-dockerhub-username/backend
-    tag: latest
-  service:
-    port: 8080
+service:
+  type: ClusterIP
+  port: 5678
