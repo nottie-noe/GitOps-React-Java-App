@@ -9,15 +9,16 @@ pipeline {
     }
 
     tools {
-        maven 'Maven'      // Jenkins tool configuration
-        nodejs 'NodeJS'    // NodeJS tool (if using plugin)
+        maven 'Maven'      // Must be configured in Jenkins > Global Tool Config
+        nodejs 'NodeJS'    // Must be configured via NodeJS Plugin
     }
 
+    stages {
         stage('Checkout') {
-        steps {
-            git branch: 'main', url: 'https://github.com/nottie-noe/GitOps-React-Java-App.git'
+            steps {
+                git branch: 'main', url: 'https://github.com/nottie-noe/GitOps-React-Java-App.git'
+            }
         }
-    }
 
         stage('Build Backend with Maven') {
             steps {
@@ -31,7 +32,8 @@ pipeline {
             steps {
                 dir("${FRONTEND_PATH}") {
                     sh 'npm install'
-                    sh 'npm run build || echo "skip if no build script"'
+                    // fallback if "build" script is not defined
+                    sh 'npm run build || echo "Skipping build: no build script defined"'
                 }
             }
         }
@@ -64,8 +66,8 @@ pipeline {
                         git config user.name "ci-bot"
                         git config user.email "ci@example.com"
 
-                        sed -i 's|repository:.*|repository: ${DOCKER_IMAGE_BACKEND}|' helm/umbrella-chart/charts/backend/values.yaml
-                        sed -i 's|repository:.*|repository: ${DOCKER_IMAGE_FRONTEND}|' helm/umbrella-chart/charts/frontend/values.yaml
+                        sed -i "s|repository:.*|repository: ${DOCKER_IMAGE_BACKEND}|" helm/umbrella-chart/charts/backend/values.yaml
+                        sed -i "s|repository:.*|repository: ${DOCKER_IMAGE_FRONTEND}|" helm/umbrella-chart/charts/frontend/values.yaml
 
                         git add helm/umbrella-chart/charts/*/values.yaml
                         git commit -m "Update image repos from Jenkins"
