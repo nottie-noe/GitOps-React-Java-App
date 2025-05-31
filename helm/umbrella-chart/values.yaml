@@ -1,8 +1,5 @@
-image:
-  repository: nginx
-  tag: latest
-  pullPolicy: IfNotPresent
-
-service:
-  type: ClusterIP
-  port: 80
+apiVersion: v2
+name: umbrella-chart
+description: A Helm umbrella chart to deploy frontend and backend
+type: application
+version: 0.1.0
