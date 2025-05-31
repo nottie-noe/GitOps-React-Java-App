@@ -18,3 +18,4 @@ spec:
         imagePullPolicy: {{ .Values.image.pullPolicy }}
         ports:
         - containerPort: 8080
+        args: {{ toYaml .Values.args | nindent 10 }}
