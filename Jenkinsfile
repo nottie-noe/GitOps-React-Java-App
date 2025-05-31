@@ -13,12 +13,11 @@ pipeline {
         nodejs 'NodeJS'    // NodeJS tool (if using plugin)
     }
 
-    stages {
         stage('Checkout') {
-            steps {
-                git 'https://github.com/nottie-noe/GitOps-React-Java-App.git'
-            }
+        steps {
+            git branch: 'main', url: 'https://github.com/nottie-noe/GitOps-React-Java-App.git'
         }
+    }
 
         stage('Build Backend with Maven') {
             steps {
