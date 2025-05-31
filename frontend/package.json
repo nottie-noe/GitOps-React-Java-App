@@ -9,4 +9,7 @@
     "test": "react-scripts test --env=jsdom",
     "build": "react-scripts build"
   }
+  "dependencies": {
+  "react-scripts": "^5.0.1"
+  }
 }
