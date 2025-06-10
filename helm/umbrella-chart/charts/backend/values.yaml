@@ -1,9 +1,8 @@
-# helm/umbrella-chart/charts/backend/values.yaml
 replicaCount: 1
 
 image:
   repository: openjdk # Placeholder
-  tag: "17-jdk-slim" # This will be overridden by umbrella-chart/values.yaml
+  tag: "17-jdk-slim" # Will be replaced with your Java app image later
   pullPolicy: IfNotPresent
 
 service:
@@ -11,34 +10,37 @@ service:
   port: 8080 # Default Spring Boot port
   targetPort: 8080
 
-autoscaling: # <-- ADD THIS BLOCK
-  enabled: false # Set to true if you want to enable HPA later
+autoscaling:
+  enabled: false
   minReplicas: 1
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
 
-serviceAccount: # <-- ADD THIS BLOCK
-  create: true # Set to false if you want to use an existing service account
-  name: "" # If create is true, name is auto-generated. If create is false, specify existing SA name here.
+serviceAccount:
+  create: true
+  name: ""
 
-podSecurityContext: {} # <-- ADD THIS BLOCK
+podSecurityContext: {}
 
-securityContext: {} # <-- ADD THIS BLOCK
+securityContext: {}
 
-resources: {}
-  # limits:
-  #   cpu: 500m
-  #   memory: 512Mi
-  # requests:
-  #   cpu: 250m
-  #   memory: 256Mi
+resources:
+  limits:
+    cpu: 500m
+    memory: 512Mi # Increased memory limit to prevent OOM
+  requests:
+    cpu: 250m
+    memory: 256Mi # Increased memory request
+
+# Temporarily disable probes for this placeholder container
+probes:
+  liveness:
+    enabled: false # Disable liveness probe
+  readiness:
+    enabled: false # Disable readiness probe
 
 # Environment variables for the backend application
 env: []
-  # - name: DB_HOST
-  #   value: "my-database"
-  # - name: DB_PORT
-  #   value: "5432"
 
 nodeSelector: {}
 
