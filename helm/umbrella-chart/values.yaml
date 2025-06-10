@@ -1,5 +1,34 @@
-apiVersion: v2
-name: umbrella-chart
-description: A Helm umbrella chart to deploy frontend and backend
-type: application
-version: 0.1.0
+# helm/umbrella-chart/values.yaml
+# Global settings for the applications
+global:
+  environment: "dev" # e.g., dev, prod, staging
+  replicaCount: 1
+
+frontend:
+  # Values specific to the frontend subchart
+  image:
+    repository: nginx
+    tag: latest # Will be replaced with your React app image later
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 80
+  ingress:
+    enabled: true
+    host: "react.example.com" # IMPORTANT: Replace with your actual domain or a placeholder for now
+    path: "/"
+    annotations:
+      kubernetes.io/ingress.class: nginx # Assuming Nginx Ingress Controller
+      # cert-manager.io/cluster-issuer: "letsencrypt-prod" # Uncomment if using cert-manager for TLS
+
+backend:
+  # Values specific to the backend subchart
+  image:
+    repository: openjdk # Placeholder
+    tag: "17-jdk-slim" # Will be replaced with your Java app image later
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+  # You might add backend-specific configs here, like database connection strings etc.
+  # For now, let's assume it's an internal service.
