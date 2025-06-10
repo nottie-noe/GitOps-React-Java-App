@@ -1,5 +1,14 @@
+# helm/umbrella-chart/Chart.yaml
 apiVersion: v2
 name: umbrella-chart
 description: A Helm umbrella chart to deploy frontend and backend
 type: application
 version: 0.1.0
+
+dependencies:
+  - name: frontend # Name of the frontend subchart
+    version: 0.1.0 # Version of the frontend subchart
+    repository: "file://charts/frontend" # Path to the frontend subchart within this repo
+  - name: backend # Name of the backend subchart
+    version: 0.1.0 # Version of the backend subchart
+    repository: "file://charts/backend" # Path to the backend subchart within this repo
