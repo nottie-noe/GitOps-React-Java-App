@@ -14,11 +14,11 @@ frontend:
     type: ClusterIP
     port: 80
   ingress:
-    enabled: true
-    host: "react.example.com" # IMPORTANT: Replace with your actual domain or a placeholder for now
+    enabled: false # <--- CHANGE THIS LINE TO FALSE
+    host: "react.example.com" # You can keep or comment this out for now
     path: "/"
     annotations:
-      kubernetes.io/ingress.class: nginx # Assuming Nginx Ingress Controller
+      kubernetes.io/ingress.class: nginx
       # cert-manager.io/cluster-issuer: "letsencrypt-prod" # Uncomment if using cert-manager for TLS
 
 backend:
