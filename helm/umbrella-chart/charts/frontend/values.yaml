@@ -19,6 +19,12 @@ ingress:
   path: "/"
   pathType: ImplementationSpecific
 
+autoscaling: # <-- ADD THIS BLOCK
+  enabled: false # Set to true if you want to enable HPA later
+  minReplicas: 1
+  maxReplicas: 3
+  targetCPUUtilizationPercentage: 80
+
 resources: {}
   # We usually recommend not to specify default resources and to leave this as a conscious
   # choice for the user. This also increases chances charts will run on environments with little
