@@ -1,10 +1,27 @@
+# helm/umbrella-chart/charts/backend/values.yaml
+replicaCount: 1
+
 image:
-  repository: nottiey/backend
-  tag: "0.2.3"
+  repository: openjdk # Placeholder
+  tag: "17-jdk-slim" # This will be overridden by umbrella-chart/values.yaml
   pullPolicy: IfNotPresent
-  args:
-    - "-text=Hello from Backend"
 
 service:
   type: ClusterIP
-  port: 5678
+  port: 8080 # Default Spring Boot port
+  targetPort: 8080
+
+resources: {}
+  # limits:
+  #   cpu: 500m
+  #   memory: 512Mi
+  # requests:
+  #   cpu: 250m
+  #   memory: 256Mi
+
+# Environment variables for the backend application
+env: []
+  # - name: DB_HOST
+  #   value: "my-database"
+  # - name: DB_PORT
+  #   value: "5432"
