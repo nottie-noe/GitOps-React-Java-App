@@ -38,22 +38,26 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          command: ["/bin/bash"] # <--- ADD THIS LINE
-          args: ["-c", "while true; do sleep 30; done;"] # <--- ADD THIS LINE (Keeps container alive)
+          command: ["/bin/bash"]
+          args: ["-c", "while true; do sleep 30; done;"] # Keep this to ensure the container stays alive
           env:
             {{- toYaml .Values.env | nindent 12 }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if .Values.probes.liveness.enabled }} # <--- ADD THIS CONDITIONAL
           livenessProbe:
             tcpSocket:
               port: {{ .Values.service.targetPort }}
             initialDelaySeconds: 30
             periodSeconds: 10
+          {{- end }} # <--- ADD THIS END CONDITIONAL
+          {{- if .Values.probes.readiness.enabled }} # <--- ADD THIS CONDITIONAL
           readinessProbe:
             tcpSocket:
               port: {{ .Values.service.targetPort }}
             initialDelaySeconds: 10
             periodSeconds: 5
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+          {{- end }} # <--- ADD THIS END CONDITIONAL
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
