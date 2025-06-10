@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "backend.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }} # This is the line that caused the error when .Values.autoscaling.enabled was missing
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
@@ -38,6 +38,8 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
+          command: ["/bin/bash"] # <--- ADD THIS LINE
+          args: ["-c", "while true; do sleep 30; done;"] # <--- ADD THIS LINE (Keeps container alive)
           env:
             {{- toYaml .Values.env | nindent 12 }}
           livenessProbe:
