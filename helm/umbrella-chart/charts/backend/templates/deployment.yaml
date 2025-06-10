@@ -6,7 +6,7 @@ metadata:
   labels:
     {{- include "backend.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
+  {{- if not .Values.autoscaling.enabled }} # This is the line that caused the error when .Values.autoscaling.enabled was missing
   replicas: {{ .Values.replicaCount }}
   {{- end }}
   selector:
