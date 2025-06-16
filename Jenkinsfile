@@ -10,8 +10,8 @@ pipeline {
     }
 
     tools {
-        maven 'Maven'      // Jenkins > Global Tool Configuration
-        nodejs 'NodeJS'    // Requires NodeJS Plugin
+        maven 'Maven'         // Must match Maven name in Jenkins > Global Tool Configuration
+        nodejs 'NodeJS'       // Must match NodeJS name in Jenkins > Global Tool Configuration
     }
 
     stages {
@@ -33,28 +33,19 @@ pipeline {
             steps {
                 dir("${FRONTEND_PATH}") {
                     sh 'npm install'
-                    // Build only if script is defined and files exist
-                    sh '''
-                        if [ -f package.json ] && grep -q '"build":' package.json && [ -f src/index.js ]; then
-                            npm run build
-                        else
-                            echo "Skipping build: build script or index.js not found"
-                        fi
-                    '''
+                    sh 'npm run build'
                 }
             }
         }
 
         stage('Build Docker Images') {
             steps {
-                script {
-                    sh "docker build -t ${DOCKER_IMAGE_BACKEND}:latest ${BACKEND_PATH}"
-                    sh "docker build -t ${DOCKER_IMAGE_FRONTEND}:latest ${FRONTEND_PATH}"
-                }
+                sh "docker build -t ${DOCKER_IMAGE_BACKEND}:latest ${BACKEND_PATH}"
+                sh "docker build -t ${DOCKER_IMAGE_FRONTEND}:latest ${FRONTEND_PATH}"
             }
         }
 
-        stage('Push Docker Images') {
+        stage('Push Docker Images to DockerHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'USER', passwordVariable: 'PASS')]) {
                     sh '''
@@ -66,18 +57,18 @@ pipeline {
             }
         }
 
-        stage('Update Helm Values (Optional)') {
+        stage('Update Helm Values and Push to GitHub') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'github-push-creds', usernameVariable: 'GIT_USER', passwordVariable: 'GIT_PASS')]) {
                     sh '''
                         git config user.name "ci-bot"
                         git config user.email "ci@example.com"
 
-                        sed -i "s|repository:.*|repository: nottiey/backend|" helm/umbrella-chart/charts/backend/values.yaml
-                        sed -i "s|repository:.*|repository: nottiey/frontend|" helm/umbrella-chart/charts/frontend/values.yaml
+                        sed -i "s|repository:.*|repository: ${DOCKER_IMAGE_BACKEND}|" helm/umbrella-chart/charts/backend/values.yaml
+                        sed -i "s|repository:.*|repository: ${DOCKER_IMAGE_FRONTEND}|" helm/umbrella-chart/charts/frontend/values.yaml
 
                         git add helm/umbrella-chart/charts/*/values.yaml
-                        git commit -m "Update image repos from Jenkins" || echo "No changes to commit"
+                        git commit -m "Update image repos from Jenkins" || echo "No changes"
                         git push https://$GIT_USER:$GIT_PASS@github.com/nottie-noe/GitOps-React-Java-App.git main
                     '''
                 }
