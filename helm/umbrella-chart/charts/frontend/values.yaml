@@ -1,22 +1,21 @@
-# helm/umbrella-chart/charts/frontend/values.yaml
 replicaCount: 1
 
 image:
   repository: nottiey/frontend
-  tag: latest # This will be overridden by umbrella-chart/values.yaml
+  tag: latest
   pullPolicy: IfNotPresent
 
 service:
-  type: ClusterIP
+  type: LoadBalancer    # Updated from ClusterIP to expose frontend via ELB
   port: 80
-  targetPort: 80 # Nginx default port
+  targetPort: 80
 
 ingress:
-  enabled: false # Will be enabled and configured by umbrella chart
+  enabled: false
   className: ""
   annotations: {}
   host: ""
-  path: "/"
+  path: /
   pathType: ImplementationSpecific
 
 autoscaling:
@@ -25,9 +24,9 @@ autoscaling:
   maxReplicas: 3
   targetCPUUtilizationPercentage: 80
 
-serviceAccount: # <-- ADD THIS BLOCK
-  create: true # Set to false if you want to use an existing service account
-  name: "" # If create is true, name is auto-generated. If create is false, specify existing SA name here.
+serviceAccount:
+  create: true
+  name: ""
 
 podSecurityContext: {}
   # fsGroup: 2000
