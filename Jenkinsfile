@@ -10,12 +10,12 @@ pipeline {
     }
 
     tools {
-        maven 'Maven'         // Must match Maven name in Jenkins > Global Tool Configuration
-        nodejs 'NodeJS'       // Must match NodeJS name in Jenkins > Global Tool Configuration
+        maven 'Maven'     // Jenkins > Global Tool Configuration name
+        nodejs 'NodeJS'   // Jenkins > Global Tool Configuration name
     }
 
     stages {
-        stage('Checkout') {
+        stage('Checkout Source Code') {
             steps {
                 git branch: 'main', url: "${GITHUB_REPO}"
             }
@@ -64,8 +64,8 @@ pipeline {
                         git config user.name "ci-bot"
                         git config user.email "ci@example.com"
 
-                        sed -i "s|repository:.*|repository: ${DOCKER_IMAGE_BACKEND}|" helm/umbrella-chart/charts/backend/values.yaml
-                        sed -i "s|repository:.*|repository: ${DOCKER_IMAGE_FRONTEND}|" helm/umbrella-chart/charts/frontend/values.yaml
+                        sed -i "s|repository:.*|repository: nottiey/backend|" helm/umbrella-chart/charts/backend/values.yaml
+                        sed -i "s|repository:.*|repository: nottiey/frontend|" helm/umbrella-chart/charts/frontend/values.yaml
 
                         git add helm/umbrella-chart/charts/*/values.yaml
                         git commit -m "Update image repos from Jenkins" || echo "No changes"
