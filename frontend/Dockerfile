@@ -1,11 +1,13 @@
-FROM node:18
-
+# Stage 1: Build React app
+FROM node:18 AS build
 WORKDIR /app
-
 COPY . .
-
 RUN npm install
-RUN npm install react-scripts
 RUN npm run build
 
-CMD ["npx", "serve", "-s", "build"]
+# Stage 2: Serve with Nginx
+FROM nginx:alpine
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Optional: override default Nginx config to support client-side routing
+COPY nginx.conf /etc/nginx/conf.d/default.conf
