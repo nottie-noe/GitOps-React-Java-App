@@ -1,4 +1,5 @@
 # helm/umbrella-chart/values.yaml
+
 # Global settings for the applications
 global:
   environment: "dev" # e.g., dev, prod, staging
@@ -7,28 +8,30 @@ global:
 frontend:
   # Values specific to the frontend subchart
   image:
-    repository: nginx
-    tag: latest # Will be replaced with your React app image later
+    repository: nottiey/frontend
+    tag: latest
     pullPolicy: IfNotPresent
+
   service:
-    type: ClusterIP
+    type: LoadBalancer  # ✅ Changed from ClusterIP
     port: 80
+    targetPort: 80
+
   ingress:
-    enabled: false # <--- CHANGE THIS LINE TO FALSE
-    host: "react.example.com" # You can keep or comment this out for now
+    enabled: false
+    host: "react.example.com"
     path: "/"
     annotations:
       kubernetes.io/ingress.class: nginx
-      # cert-manager.io/cluster-issuer: "letsencrypt-prod" # Uncomment if using cert-manager for TLS
+      # cert-manager.io/cluster-issuer: "letsencrypt-prod"
 
 backend:
   # Values specific to the backend subchart
   image:
-    repository: openjdk # Placeholder
-    tag: "17-jdk-slim" # Will be replaced with your Java app image later
+    repository: nottiey/backend
+    tag: latest
     pullPolicy: IfNotPresent
+
   service:
     type: ClusterIP
     port: 8080
-  # You might add backend-specific configs here, like database connection strings etc.
-  # For now, let's assume it's an internal service.
