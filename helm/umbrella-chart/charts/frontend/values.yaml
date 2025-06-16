@@ -2,7 +2,7 @@
 replicaCount: 1
 
 image:
-  repository: nginx # Placeholder
+  repository: nottiey/frontend
   tag: latest # This will be overridden by umbrella-chart/values.yaml
   pullPolicy: IfNotPresent
 

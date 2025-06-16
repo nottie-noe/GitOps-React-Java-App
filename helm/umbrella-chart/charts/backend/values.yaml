@@ -1,7 +1,7 @@
 replicaCount: 1
 
 image:
-  repository: openjdk # Placeholder
+  repository: nottiey/backend
   tag: "17-jdk-slim" # Will be replaced with your Java app image later
   pullPolicy: IfNotPresent
 
