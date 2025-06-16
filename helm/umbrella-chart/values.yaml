@@ -1,21 +1,17 @@
-# helm/umbrella-chart/values.yaml
-
-# Global settings for the applications
 global:
-  environment: "dev" # e.g., dev, prod, staging
+  environment: "dev"
   replicaCount: 1
 
 frontend:
-  # Values specific to the frontend subchart
   image:
     repository: nottiey/frontend
     tag: latest
     pullPolicy: IfNotPresent
 
   service:
-    type: LoadBalancer  # ✅ Changed from ClusterIP
+    type: LoadBalancer   # ✅ To expose externally
     port: 80
-    targetPort: 80
+    targetPort: 80       # ✅ Match Nginx container port
 
   ingress:
     enabled: false
@@ -23,10 +19,8 @@ frontend:
     path: "/"
     annotations:
       kubernetes.io/ingress.class: nginx
-      # cert-manager.io/cluster-issuer: "letsencrypt-prod"
 
 backend:
-  # Values specific to the backend subchart
   image:
     repository: nottiey/backend
     tag: latest
