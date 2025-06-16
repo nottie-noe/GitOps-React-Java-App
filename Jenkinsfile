@@ -75,19 +75,5 @@ pipeline {
             }
         }
 
-        
-        stage('Direct Deploy to EKS (Optional - Skip if using ArgoCD)') {
-            steps {
-                withKubeConfig([credentialsId: 'kubeconfig-cred-id']) {
-                    sh '''
-                        helm upgrade --install gitops-app helm/umbrella-chart \
-                          --namespace default \
-                          --set backend.image.repository=${DOCKER_IMAGE_BACKEND} \
-                          --set frontend.image.repository=${DOCKER_IMAGE_FRONTEND}
-                    '''
-                }
-            }
-        }
-        
     }
 }
